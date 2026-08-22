@@ -1,342 +1,62 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Mazi O Matthew Platform">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Mazi O Matthew Platform</title>
-
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: Arial, sans-serif;
-      background: #f5f7fb;
-      color: #111827;
-    }
-
-    header {
-      height: 64px;
-      background: white;
-      border-bottom: 1px solid #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 5%;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-
-    .brand {
-      font-size: 20px;
-      font-weight: 800;
-      color: #2563eb;
-    }
-
-    .login-btn {
-      border: 0;
-      background: #2563eb;
-      color: white;
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-weight: 700;
-    }
-
-    .hero {
-      padding: 70px 20px;
-      text-align: center;
-      background: white;
-    }
-
-    .hero h1 {
-      font-size: clamp(38px, 8vw, 64px);
-      margin-bottom: 18px;
-    }
-
-    .hero h1 span {
-      color: #2563eb;
-    }
-
-    .hero p {
-      max-width: 650px;
-      margin: auto;
-      color: #6b7280;
-      font-size: 18px;
-      line-height: 1.6;
-    }
-
-    .actions {
-      margin-top: 28px;
-      display: flex;
-      justify-content: center;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .action {
-      padding: 13px 22px;
-      border-radius: 10px;
-      text-decoration: none;
-      font-weight: 700;
-    }
-
-    .primary {
-      background: #2563eb;
-      color: white;
-    }
-
-    .secondary {
-      border: 1px solid #d1d5db;
-      color: #111827;
-      background: white;
-    }
-
-    .feed {
-      max-width: 700px;
-      margin: 40px auto;
-      padding: 0 16px;
-    }
-
-    .feed-title {
-      font-size: 28px;
-      margin-bottom: 20px;
-    }
-
-    .post {
-      background: white;
-      border: 1px solid #e5e7eb;
-      border-radius: 16px;
-      margin-bottom: 20px;
-      overflow: hidden;
-    }
-
-    .post-header {
-      padding: 16px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .avatar {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: #2563eb;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-    }
-
-    .post-content {
-      padding: 0 16px 16px;
-      line-height: 1.6;
-    }
-
-    .post-media {
-      width: 100%;
-      height: 300px;
-      background: #e5e7eb;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #6b7280;
-      font-weight: 700;
-    }
-
-    .post-actions {
-      padding: 14px 16px;
-      border-top: 1px solid #e5e7eb;
-      display: flex;
-      gap: 20px;
-    }
-
-    .post-actions button {
-      border: 0;
-      background: none;
-      font-size: 15px;
-      cursor: pointer;
-    }
-
-    .features {
-      padding: 50px 6%;
-      background: white;
-    }
-
-    .features h2 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .grid {
-      max-width: 1000px;
-      margin: auto;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 18px;
-    }
-
-    .card {
-      padding: 25px;
-      background: #f8fafc;
-      border-radius: 14px;
-      text-align: center;
-    }
-
-    .card p {
-      color: #6b7280;
-      margin-top: 10px;
-      line-height: 1.5;
-    }
-
-    footer {
-      background: #111827;
-      color: white;
-      text-align: center;
-      padding: 25px;
-    }
-
-    @media (max-width: 600px) {
-      header {
-        padding: 0 16px;
-      }
-
-      .hero {
-        padding: 55px 18px;
-      }
-
-      .post-media {
-        height: 240px;
-      }
-    }
-  </style>
+  <meta name="description" content="Mazi O Matthew Platform — connect, create and grow.">
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
-  <header>
-    <div class="brand">MAZI O MATTHEW</div>
-    <button class="login-btn" onclick="openAuth()">Login / Sign Up</button>
+  <header class="topbar">
+    <a class="brand" href="#">MAZI O MATTHEW</a>
+    <nav>
+      <button data-view="home">Home</button>
+      <button data-view="discover">Discover</button>
+      <button data-view="profile">Profile</button>
+      <button id="authButton">Login / Sign Up</button>
+    </nav>
   </header>
 
-  <section class="hero">
-    <h1>Connect. <span>Create. Grow.</span></h1>
-
-    <p>
-      Welcome to the Mazi O Matthew Platform — a place to connect
-      with people, share your creativity, discover content and grow
-      your digital presence.
-    </p>
-
-    <div class="actions">
-      <a class="action primary" href="#feed">Explore Feed</a>
-      <a class="action secondary" href="#features">Discover More</a>
-    </div>
-  </section>
-
-  <section class="feed" id="feed">
-    <h2 class="feed-title">Community Feed</h2>
-
-    <article class="post">
-      <div class="post-header">
-        <div class="avatar">M</div>
-        <div>
-          <strong>Mazi O Matthew</strong>
-          <div style="color:#6b7280;font-size:13px;">Welcome post</div>
+  <main id="app">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">MAZI O MATTHEW PLATFORM</p>
+        <h1>Connect. <span>Create. Grow.</span></h1>
+        <p class="hero-copy">Share ideas, photos and videos, build your profile, follow people and grow your digital community.</p>
+        <div class="hero-actions">
+          <button class="primary" data-view="home">Explore Feed</button>
+          <button class="secondary" id="heroAuth">Join the Platform</button>
         </div>
       </div>
+    </section>
 
-      <div class="post-content">
-        Welcome to the beginning of the Mazi O Matthew Platform.
-        Connect, create and grow together.
-      </div>
+    <section id="view" class="content">
+      <div id="status" class="status"></div>
+      <div id="viewContent"></div>
+    </section>
+  </main>
 
-      <div class="post-media">
-        Photo / Video
-      </div>
-
-      <div class="post-actions">
-        <button>❤️ Like</button>
-        <button>💬 Comment</button>
-        <button>↗ Share</button>
-      </div>
-    </article>
-  </section>
-
-  <section class="features" id="features">
-    <h2>Platform Features</h2>
-
-    <div class="grid">
-
-      <div class="card">
-        <h3>🎥 Videos</h3>
-        <p>Share and discover video content.</p>
-      </div>
-
-      <div class="card">
-        <h3>📸 Photos</h3>
-        <p>Share images and moments with your community.</p>
-      </div>
-
-      <div class="card">
-        <h3>👤 Profiles</h3>
-        <p>Create your own profile and build your audience.</p>
-      </div>
-
-      <div class="card">
-        <h3>❤️ Engagement</h3>
-        <p>Like, comment, follow and interact with others.</p>
-      </div>
-
+  <div id="authModal" class="modal hidden">
+    <div class="modal-card">
+      <button class="close" id="closeAuth">×</button>
+      <h2 id="authTitle">Create account</h2>
+      <form id="authForm">
+        <div id="signupFields">
+          <input id="fullName" placeholder="Full name" autocomplete="name">
+          <input id="username" placeholder="Username" autocomplete="username">
+        </div>
+        <input id="email" type="email" placeholder="Email address" autocomplete="email" required>
+        <input id="password" type="password" placeholder="Password" autocomplete="current-password" required minlength="8">
+        <button class="primary full" id="authSubmit">Sign Up</button>
+      </form>
+      <button class="link" id="toggleAuth">Already have an account? Login</button>
+      <button class="link" id="forgotPassword">Forgot password?</button>
+      <p id="authMessage" class="message"></p>
     </div>
-  </section>
+  </div>
 
-  <footer>
-    © 2026 Mazi O Matthew Platform
-  </footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<script>
-const SUPABASE_URL = "https://etaqcbooictovauvlxkw.supabase.co";
-
-const SUPABASE_PUBLISHABLE_KEY = "PASTE_YOUR_PUBLISHABLE_KEY_HERE" ="sb_publishable_hudHuFPKIgBDh2zPki6u6g_Sdc1rp7x ;
-
-const supabaseClient = window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
-
-function openAuth() {
-  const email = prompt("Enter your email address:");
-
-  if (!email) return;
-
-  const password = prompt("Enter your password:");
-
-  if (!password) return;
-
-  signUpUser(email, password);
-}
-
-async function signUpUser(email, password) {
-  const { error } = await supabaseClient.auth.signUp({
-    email: email,
-    password: password
-  });
-
-  if (error) {
-    alert("Error: " + error.message);
-    return;
-  }
-
-  alert("Account created! Please check your email to confirm your account.");
-}
-</script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="app.js"></script>
 </body>
 </html>
