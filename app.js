@@ -110,7 +110,7 @@ async function getPosts() {
   return data || [];
 }
 
-functfunction postCard(post) {
+function postCard(post) {
   const profile = post.profiles || {};
   const name = profile.full_name || profile.username || "User";
   const media = post.media_url
