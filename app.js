@@ -188,22 +188,74 @@ async function renderHome() {
   $("joinFeed")?.addEventListener("click", () => showAuth("signup"));
 }
 
+async async function updateProfile() {
+  if (!currentUser) return;
+
+  const fullName = $("editFullName").value.trim();
+  const username = $("editUsername").value.trim().toLowerCase();
+  const bio = $("editBio").value.trim();
+
+  if (!fullName || !username) {
+    $("profileMessage").textContent = "Name and username are required.";
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("profiles")
+    .update({
+      full_name: fullName,
+      username: username,
+      bio: bio
+    })
+    .eq("id", currentUser.id);
+
+  if (error) {
+    $("profileMessage").textContent = error.message;
+    return;
+  }
+
+  $("profileMessage").textContent = "Profile updated successfully.";
+  await renderProfile();
+}
+
 async function renderProfile() {
   if (!currentUser) {
-    $("viewContent").innerHTML = `<div class="profile-card"><h2>Your Profile</h2>
-      <p>Please log in to view your profile.</p><button class="primary" id="profileLogin">Login / Sign Up</button></div>`;
+    $("viewContent").innerHTML = `<div class="profile-card">
+      <h2>Your Profile</h2>
+      <p>Please log in to view your profile.</p>
+      <button class="primary" id="profileLogin">Login / Sign Up</button>
+    </div>`;
+
     $("profileLogin").onclick = () => showAuth("signup");
     return;
   }
+
   const profile = await loadProfile();
+
   const name = profile?.full_name || currentUser.user_metadata?.full_name || "User";
   const username = profile?.username || currentUser.user_metadata?.username || "user";
+  const bio = profile?.bio || "";
+
   $("viewContent").innerHTML = `<div class="profile-card">
     <div class="profile-avatar">${escapeHtml(initials(name))}</div>
-    <h2>${escapeHtml(name)}</h2><p>@${escapeHtml(username)}</p>
-    <p>${escapeHtml(profile?.bio || "Welcome to my Mazi O Matthew Platform profile.")}</p>
-    <p><strong>Email:</strong> ${escapeHtml(currentUser.email || "")}</p>
+
+    <h2>Edit Your Profile</h2>
+
+    <label>Full Name</label>
+    <input id="editFullName" value="${escapeHtml(name)}">
+
+    <label>Username</label>
+    <input id="editUsername" value="${escapeHtml(username)}">
+
+    <label>Bio</label>
+    <textarea id="editBio" placeholder="Tell people about yourself...">${escapeHtml(bio)}</textarea>
+
+    <button class="primary" id="saveProfile">Save Profile</button>
+
+    <p id="profileMessage" class="message"></p>
   </div>`;
+
+  $("saveProfile").addEventListener("click", updateProfile);
 }
 
 async function renderDiscover() {
