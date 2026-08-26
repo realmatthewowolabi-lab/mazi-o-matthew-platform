@@ -183,7 +183,8 @@ async function toggleLike(postId) {
   }
 
   await render("home");
-}async function deletePost(postId) {
+}
+async function deletePost(postId) {
   if (!currentUser) return;
 
   const confirmed = confirm("Are you sure you want to delete this post?");
@@ -222,7 +223,8 @@ async function renderHome() {
   $("viewContent").innerHTML = `<div class="feed">${composer}<div id="posts">
     ${posts.length ? posts.map(postCard).join("") : `<div class="profile-card"><h3>Your community starts here.</h3><p>No posts yet. Be the first to share something.</p></div>`}
   </div></div>`;
-  $("publishPost")?.addEventListener("click", createPost);document.querySelectorAll(".like-post").forEach(button => {
+  $("publishPost")?.addEventListener("click", createPost);
+  document.querySelectorAll(".like-post").forEach(button => {
   button.addEventListener("click", () => toggleLike(button.dataset.postId));
 });
 
