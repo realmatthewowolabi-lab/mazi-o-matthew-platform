@@ -188,7 +188,7 @@ async function renderHome() {
   $("joinFeed")?.addEventListener("click", () => showAuth("signup"));
 }
 
-async async function updateProfile() {
+async function updateProfile() {
   if (!currentUser) return;
 
   const fullName = $("editFullName").value.trim();
