@@ -237,7 +237,11 @@ async function renderProfile() {
   const bio = profile?.bio || "";
 
   $("viewContent").innerHTML = `<div class="profile-card">
-    <div class="profile-avatar">${escapeHtml(initials(name))}</div>
+    <div class="profile-avatar" id="profileAvatar">${escapeHtml(initials(name))}</div>
+
+<input type="file" id="avatarFile" accept="image/*" style="display:none;">
+
+<button class="primary" id="uploadAvatar">📸 Change Profile Photo</button>
 
     <h2>Edit Your Profile</h2>
 
@@ -256,8 +260,54 @@ async function renderProfile() {
   </div>`;
 
   $("saveProfile").addEventListener("click", updateProfile);
-}
+  $("uploadAvatar").addEventListener("click", () => $("avatarFile").click());
 
+$("avatarFile").addEventListener("change", uploadAvatar);
+}
+async function uploadAvatar() {
+  if (!currentUser) return;
+
+  const file = $("avatarFile").files[0];
+
+  if (!file) {
+    $("profileMessage").textContent = "Please select a photo first.";
+    return;
+  }
+
+  const fileExt = file.name.split(".").pop();
+  const filePath = `${currentUser.id}/avatar.${fileExt}`;
+
+  const { error: uploadError } = await supabaseClient
+    .storage
+    .from("avatars")
+    .upload(filePath, file, {
+      upsert: true,
+      contentType: file.type
+    });
+
+  if (uploadError) {
+    $("profileMessage").textContent = uploadError.message;
+    return;
+  }
+
+  const { data } = supabaseClient
+    .storage
+    .from("avatars")
+    .getPublicUrl(filePath);
+
+  const { error: updateError } = await supabaseClient
+    .from("profiles")
+    .update({ avatar_url: data.publicUrl })
+    .eq("id", currentUser.id);
+
+  if (updateError) {
+    $("profileMessage").textContent = updateError.message;
+    return;
+  }
+
+  $("profileMessage").textContent = "Profile photo updated successfully.";
+  await renderProfile();
+      }
 async function renderDiscover() {
   $("viewContent").innerHTML = `<div class="profile-card"><h2>Discover</h2>
     <p>Discover people and content on the Mazi O Matthew Platform.</p>
