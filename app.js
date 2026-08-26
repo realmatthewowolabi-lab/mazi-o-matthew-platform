@@ -237,7 +237,12 @@ async function renderProfile() {
   const bio = profile?.bio || "";
 
   $("viewContent").innerHTML = `<div class="profile-card">
-    <div class="profile-avatar" id="profileAvatar">${escapeHtml(initials(name))}</div>
+    <div class="profile-avatar" id="profileAvatar">
+  ${profile?.avatar_url
+    ? `<img src="${escapeHtml(profile.avatar_url)}" alt="Profile photo" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">`
+    : escapeHtml(initials(name))
+  }
+</div>
 
 <input type="file" id="avatarFile" accept="image/*" style="display:none;">
 
