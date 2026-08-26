@@ -134,10 +134,10 @@ function postCard(post) {
     ${media}
 
     <div class="post-actions">
-      <button>♡ Like</button>
-      <button>💬 Comment</button>
-      ${deleteButton}
-    </div>
+  <button class="like-post" data-post-id="${escapeHtml(post.id)}">♡ Like</button>
+  <button>💬 Comment</button>
+  ${deleteButton}
+</div>
   </article>`;
 }
 async function deletePost(postId) {
