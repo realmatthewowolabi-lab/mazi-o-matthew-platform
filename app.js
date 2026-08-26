@@ -140,7 +140,50 @@ function postCard(post) {
 </div>
   </article>`;
 }
-async function deletePost(postId) {
+async function toggleLike(postId) {
+  if (!currentUser) {
+    showAuth("signup");
+    return;
+  }
+
+  const { data: existingLike, error: checkError } = await supabaseClient
+    .from("likes")
+    .select("id")
+    .eq("post_id", postId)
+    .eq("user_id", currentUser.id)
+    .maybeSingle();
+
+  if (checkError) {
+    alert(checkError.message);
+    return;
+  }
+
+  if (existingLike) {
+    const { error } = await supabaseClient
+      .from("likes")
+      .delete()
+      .eq("id", existingLike.id);
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+  } else {
+    const { error } = await supabaseClient
+      .from("likes")
+      .insert({
+        post_id: postId,
+        user_id: currentUser.id
+      });
+
+    if (error) {
+      alert(error.message);
+      return;
+    }
+  }
+
+  await render("home");
+}async function deletePost(postId) {
   if (!currentUser) return;
 
   const confirmed = confirm("Are you sure you want to delete this post?");
@@ -179,7 +222,9 @@ async function renderHome() {
   $("viewContent").innerHTML = `<div class="feed">${composer}<div id="posts">
     ${posts.length ? posts.map(postCard).join("") : `<div class="profile-card"><h3>Your community starts here.</h3><p>No posts yet. Be the first to share something.</p></div>`}
   </div></div>`;
-  $("publishPost")?.addEventListener("click", createPost);
+  $("publishPost")?.addEventListener("click", createPost);document.querySelectorAll(".like-post").forEach(button => {
+  button.addEventListener("click", () => toggleLike(button.dataset.postId));
+});
 
   document.querySelectorAll(".delete-post").forEach(button => {
   button.addEventListener("click", () => deletePost(button.dataset.postId));
