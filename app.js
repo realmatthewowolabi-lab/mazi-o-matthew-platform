@@ -110,18 +110,55 @@ async function getPosts() {
   return data || [];
 }
 
-function postCard(post) {
+functfunction postCard(post) {
   const profile = post.profiles || {};
   const name = profile.full_name || profile.username || "User";
-  const media = post.media_url ? `<img class="post-media" src="${escapeHtml(post.media_url)}" alt="Post media">` : "";
+  const media = post.media_url
+    ? `<img class="post-media" src="${escapeHtml(post.media_url)}" alt="Post media">`
+    : "";
+
+  const deleteButton = currentUser && post.user_id === currentUser.id
+    ? `<button class="delete-post" data-post-id="${escapeHtml(post.id)}">🗑️ Delete</button>`
+    : "";
+
   return `<article class="post">
-    <div class="post-head"><div class="avatar">${escapeHtml(initials(name))}</div>
-    <div><strong>${escapeHtml(name)}</strong><br><small>@${escapeHtml(profile.username || "user")}</small></div></div>
-    <div class="post-body">${escapeHtml(post.content || "")}</div>${media}
-    <div class="post-actions"><button>♡ Like</button><button>💬 Comment</button></div>
+    <div class="post-head">
+      <div class="avatar">${escapeHtml(initials(name))}</div>
+      <div>
+        <strong>${escapeHtml(name)}</strong><br>
+        <small>@${escapeHtml(profile.username || "user")}</small>
+      </div>
+    </div>
+
+    <div class="post-body">${escapeHtml(post.content || "")}</div>
+    ${media}
+
+    <div class="post-actions">
+      <button>♡ Like</button>
+      <button>💬 Comment</button>
+      ${deleteButton}
+    </div>
   </article>`;
 }
+async function deletePost(postId) {
+  if (!currentUser) return;
 
+  const confirmed = confirm("Are you sure you want to delete this post?");
+  if (!confirmed) return;
+
+  const { error } = await supabaseClient
+    .from("posts")
+    .delete()
+    .eq("id", postId)
+    .eq("user_id", currentUser.id);
+
+  if (error) {
+    alert(error.message);
+    return;
+  }
+
+  await render("home");
+}
 async function createPost() {
   if (!currentUser) { showAuth("signup"); return; }
   const content = $("postContent").value.trim();
@@ -143,6 +180,11 @@ async function renderHome() {
     ${posts.length ? posts.map(postCard).join("") : `<div class="profile-card"><h3>Your community starts here.</h3><p>No posts yet. Be the first to share something.</p></div>`}
   </div></div>`;
   $("publishPost")?.addEventListener("click", createPost);
+
+  document.querySelectorAll(".delete-post").forEach(button => {
+  button.addEventListener("click", () => deletePost(button.dataset.postId));
+});
+  
   $("joinFeed")?.addEventListener("click", () => showAuth("signup"));
 }
 
